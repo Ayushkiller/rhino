@@ -3,7 +3,8 @@ plugins{
     id 'maven-publish'
 }
 
-group = 'com.github.Anuken'
+group = 'com.github.Ayushkiller'
+version = '1.0.0'
 
 tasks.withType(JavaCompile){
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -20,7 +21,7 @@ task sourceJar(type: Jar){
 }
 
 task runtimeSourceJar(type: Jar){
-    classifier 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allJava
 }
 
@@ -28,6 +29,17 @@ publishing{
     publications{
         maven(MavenPublication){
             from components.java
+            artifactId = 'rhino'
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Ayushkiller/rhino")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GPR_USER") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GPR_KEY") ?: System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
@@ -45,7 +57,6 @@ test{
 
     testLogging{
         exceptionFormat = 'full'
-
         testLogging.showStandardStreams = true
     }
 }
